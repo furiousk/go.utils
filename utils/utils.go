@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	models "github.com/furiousk/go.models"
+	"github.com/furiousk/go.models/models"
 )
 
 const (
