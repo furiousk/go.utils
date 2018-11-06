@@ -322,3 +322,14 @@ func ReadOptions(file string) (config map[string]string) {
 	}
 	return
 }
+
+//DiffDate ...
+func DiffDate(date time.Time) (_hrs int) {
+
+	_now := time.Now()
+	_sub := _now.Add(-10 * time.Hour)
+	_dif := _sub.Sub(date)
+	_hrs = int(_dif.Hours())
+
+	return
+}
