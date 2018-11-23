@@ -9,11 +9,24 @@ import (
 	"time"
 
 	"github.com/furiousk/go.models/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
 	geocon = 360000
 )
+
+//HashPassword...
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+//CheckPasswordHash...
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
 
 //SetInterval ...
 func SetInterval(someFunc func(), milliseconds int, async bool) chan bool {
