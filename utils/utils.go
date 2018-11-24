@@ -3,6 +3,7 @@ package utils
 import (
 	"bufio"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -15,6 +16,28 @@ import (
 const (
 	geocon = 360000
 )
+
+//CoordinatesAdjusts...
+func CoordinatesAdjusts(lat string, lng string, decimal_places int) (_q [2]float64) {
+
+	pow := math.Pow(10, float64(decimal_places))
+
+	clat, _ := strconv.ParseFloat(lat, 64)
+	clng, _ := strconv.ParseFloat(lng, 64)
+
+	log.Println(clat, clng)
+
+	_lat := math.Ceil(clat*pow) / pow
+	_lng := math.Ceil(clng*pow) / pow
+
+	log.Println(_lat, _lng)
+
+	_q = [2]float64{
+		_lng,
+		_lat,
+	}
+	return
+}
 
 //HashPassword...
 func HashPassword(password string) (string, error) {
