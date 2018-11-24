@@ -17,6 +17,39 @@ const (
 	geocon = 360000
 )
 
+//ReadOptions ...
+func ReadOptions(file string) (config *models.Environment) {
+
+	_file, err := os.Open(file)
+	Check(err)
+	defer _file.Close()
+
+	scanner := bufio.NewScanner(_file)
+	_map := make(map[string]string)
+
+	for scanner.Scan() {
+		newarray := strings.Split(scanner.Text(), "=")
+		_map[newarray[0]] = newarray[1]
+	}
+
+	config = &models.Environment{
+		Appname:      _map["APP_NAME"],
+		Appenv:       _map["APP_ENV"],
+		Appport:      _map["APP_PORT"],
+		Dbconnection: _map["DB_CONNECTION"],
+		Dbhost:       _map["DB_HOST"],
+		Dbport:       _map["DB_PORT"],
+		Dbdatabase:   _map["DB_DATABASE"],
+		Dbusername:   _map["DB_USERNAME"],
+		Dbpassword:   _map["DB_PASSWORD"]}
+
+	if serr := scanner.Err(); serr != nil {
+		log.Fatal(serr)
+	}
+
+	return
+}
+
 //CoordinatesAdjusts...
 func CoordinatesAdjusts(lat string, lng string, decimal_places int) (_q [2]float64) {
 
@@ -336,39 +369,6 @@ func Check(err error) {
 	if err != nil {
 		panic(err)
 	}
-}
-
-//ReadOptions ...
-func ReadOptions(file string) (config *models.Environment) {
-
-	_file, err := os.Open(file)
-	Check(err)
-	defer _file.Close()
-
-	scanner := bufio.NewScanner(_file)
-	_map := make(map[string]string)
-
-	for scanner.Scan() {
-		newarray := strings.Split(scanner.Text(), "=")
-		_map[newarray[0]] = newarray[1]
-	}
-
-	config = &models.Environment{
-		Appname:      _map["APP_NAME"],
-		Appenv:       _map["APP_ENV"],
-		Appport:      _map["APP_PORT"],
-		Dbconnection: _map["DB_CONNECTION"],
-		Dbhost:       _map["DB_HOST"],
-		Dbport:       _map["DB_PORT"],
-		Dbdatabase:   _map["DB_DATABASE"],
-		Dbusername:   _map["DB_USERNAME"],
-		Dbpassword:   _map["DB_PASSWORD"]}
-
-	if serr := scanner.Err(); serr != nil {
-		log.Fatal(serr)
-	}
-
-	return
 }
 
 //DiffDate ...
