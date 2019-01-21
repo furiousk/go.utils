@@ -41,7 +41,10 @@ func ReadOptions(file string) (config *models.Environment) {
 		Dbport:       _map["DB_PORT"],
 		Dbdatabase:   _map["DB_DATABASE"],
 		Dbusername:   _map["DB_USERNAME"],
-		Dbpassword:   _map["DB_PASSWORD"]}
+		Dbpassword:   _map["DB_PASSWORD"],
+		Exturl:       _map["EXT_URL"],
+		Exttoken:     _map["EXT_TOKEN"],
+	}
 
 	if serr := scanner.Err(); serr != nil {
 		log.Fatal(serr)
@@ -50,10 +53,10 @@ func ReadOptions(file string) (config *models.Environment) {
 	return
 }
 
-//CoordinatesAdjusts...
-func CoordinatesAdjusts(lat string, lng string, decimal_places int) (_q [2]float64) {
+//CoordinatesAdjusts ....
+func CoordinatesAdjusts(lat string, lng string, decimalPlaces int) (_q [2]float64) {
 
-	pow := math.Pow(10, float64(decimal_places))
+	pow := math.Pow(10, float64(decimalPlaces))
 
 	clat, _ := strconv.ParseFloat(lat, 64)
 	clng, _ := strconv.ParseFloat(lng, 64)
@@ -72,13 +75,13 @@ func CoordinatesAdjusts(lat string, lng string, decimal_places int) (_q [2]float
 	return
 }
 
-//HashPassword...
+//HashPassword ....
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
 }
 
-//CheckPasswordHash...
+//CheckPasswordHash ....
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
@@ -149,7 +152,7 @@ func Sumbin(str string) string {
 		if string(newarray[len]) == "0" {
 
 			newarray[len] = "1"
-			return strings.Join(newarray, "")
+			//return strings.Join(newarray, "")
 
 		} else {
 
@@ -159,7 +162,7 @@ func Sumbin(str string) string {
 	return strings.Join(newarray, "")
 }
 
-//Pad...
+//Pad ....
 func Pad(str string, side string, size int) (newstr string) {
 
 	newstr = str
@@ -174,7 +177,7 @@ func Pad(str string, side string, size int) (newstr string) {
 	return
 }
 
-//Makepos...
+//Makepos ....
 func Makepos(pos string) (lat, lng float64) {
 
 	latstr := Substr(pos, 0, 8)
@@ -200,22 +203,22 @@ func Show27bin(str string) float64 {
 
 	data := strings.Split(str, "")
 	key := len(data) - 27
+	var _dec int
 
 	if data[key] == "1" {
 
 		_bin := Invertbin(str)
 		_bin2 := Sumbin(_bin)
-		_dec := Bin2dec(_bin2)
-		return ((float64(_dec) / geocon) * -1)
+		_dec = Bin2dec(_bin2)
 
 	} else {
 
-		_dec := Bin2dec(str)
-		return ((float64(_dec) / geocon) * -1)
+		_dec = Bin2dec(str)
 	}
+	return ((float64(_dec) / geocon) * -1)
 }
 
-//Ternary...
+//Ternary ....
 func Ternary(vlra string, vlrb string, retorno string) (result string) {
 	result = "0"
 	if vlra == vlrb {
@@ -224,17 +227,16 @@ func Ternary(vlra string, vlrb string, retorno string) (result string) {
 	return
 }
 
-//CheckOneByte...
+//CheckOneByte ....
 func CheckOneByte(size int, hex string, key string, m map[string]map[string]models.Mult) int {
 
 	ibyte := Substr(hex, size, 2)
 	i := Pad(Hex2bin(ibyte), "L", 8)
 	split := strings.Split(i, "")
-	mm, ok := m[key]
+	_, ok := m[key]
 
 	if !ok {
-		mm = make(map[string]models.Mult)
-		m[key] = mm
+		m[key] = make(map[string]models.Mult)
 	}
 
 	switch key {
@@ -305,7 +307,7 @@ func CheckOneByte(size int, hex string, key string, m map[string]map[string]mode
 
 		size += 2
 		_key, _ := strconv.Atoi(string(key))
-		_key += 1
+		_key++
 		_keystr := strconv.Itoa(_key)
 		size = CheckOneByte(size, hex, _keystr, m)
 	}
@@ -356,7 +358,7 @@ func Hex2dec(hexStr string) int { // testado
 	return int(result)
 }
 
-//TrimLeftChar...
+//TrimLeftChar ....
 func TrimLeftChar(s string, ocor string) string {
 	if s[0:1] == ocor {
 		return s[1:]
