@@ -45,6 +45,7 @@ func ReadOptions(file string) (config *models.Environment) {
 		Exturl:       _map["EXT_URL"],
 		Exttoken:     _map["EXT_TOKEN"],
 		Extdias:      _map["EXT_DIAS"],
+		Exttimer:     _map["EXT_TIMER"],
 	}
 
 	if serr := scanner.Err(); serr != nil {
