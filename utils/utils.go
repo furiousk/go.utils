@@ -89,7 +89,7 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 //SetInterval ...
-func SetInterval(someFunc func(), milliseconds int, async bool) chan bool {
+func SetInterval(someFunc func(), milliseconds int64, async bool) chan bool {
 
 	interval := time.Duration(milliseconds) * time.Millisecond
 	ticker := time.NewTicker(interval)
